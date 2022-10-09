@@ -1,0 +1,8 @@
+environment: dev
+portNumber: 5000
+replicaCount: 1
+maxReplicaCount: 5
+imageName: #TODO: update $REPOSITORY/testapp:1
+nodeGroupName: node-group-dev
+cpuLimit: 1
+memoryLimit: 1

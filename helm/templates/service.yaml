@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: service
+metadata:
+    name: {{ .Values.environment }}-testapp
+    namespace: {{ .Release.Namespace }}
+spec:
+    selector: 
+        app: {{ .Values.environment }}-testapp
+    ports:
+    - port: {{ .Values.portNumber }}
+      targetPort: {{ .Values.portNumber }}
+      name: testapp
+    type: ClusterIP

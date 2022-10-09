@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: deployment
+metadata:
+    name: {{ .Values.environment }}-testapp
+    namespace: {{ .Release.Namespace }}
+    labels:
+        app: {{ .Values.environment }}-testapp
+        env: {{ .Values.environment }}
+spec:
+    replicas: {{ .Values.replicaCount }}
+    selector:
+        matchLabels: 
+            app: {{ .Values.environment }}-testapp
+    template:
+        metadata:
+            labels:
+                app: {{ .Values.environment }}-testapp
+                env: {{ .Values.environment }}
+        spec:
+            containers:
+            - name: {{ .Values.environment }}-testapp
+              image: {{ .Values.imageName }}
+              imagePullPolicy: Always
+              resources:
+                limits:
+                    cpu: {{ .Values.cpuLimit }}
+                    memory: {{ .Values.memoryLimit }}
+              ports:
+              - cotainerPort: {{ .Values.portNumber }}
+            affinity:
+                nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                        nodeSelectorTerms:
+                         - matchExpressions:
+                            - key: nodegrup-role
+                              operator: In
+                              values: 
+                                - {{ .Values.nodeGroupName }}

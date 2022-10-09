@@ -1,0 +1,8 @@
+environment: prod
+portNumber: 5000
+replicaCount: 3
+maxReplicaCount: 15
+imageName: #TODO: update $REPOSITORY/testapp:1
+nodeGroupName: node-group-prod
+cpuLimit: 4
+memoryLimit: 32
