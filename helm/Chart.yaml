@@ -1,0 +1,4 @@
+apiVersion: v1
+name: testapp
+version: 0.1.0
+description: helm chart for the testapp application
