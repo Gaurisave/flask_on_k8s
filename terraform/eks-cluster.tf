@@ -1,36 +1,35 @@
-module "eks" {
-    source  = "terraform-aws-modules/eks/aws"
-    version = "18.26.6"
-    cluster_name    = testapp_cluster
-    cluster_version = "1.22"
-    vpc_id     = data.aws_vpc.testapp.id
-    subnet_ids = local.node_subnet_id
-
-    eks_managed_node_group_defaults = {
-        instance_type = ["m5.large", "m5n.2xlarge"]
-        attach_cluster_primary_security_group = true
+resource "aws_eks_cluster" "testapp_cluster" {
+    name = "testapp_cluster"
+    role_arn = aws_iam_role.eks_master_role.arn
+    vpc_config {
+        subnet_ids = local.node_subnet_id
     }
+}
 
-    eks_managed_node_groups = {
-        dev = {
-            name = "node-group-dev"
-            instance_types = ["m5.large"]
-            min_size     = 3
-            max_size     = 5
-            desired_size = 3
-            vpc_security_group_ids = [
-                aws_security_group.node_group_dev_sg.id
-            ]
-        }
-        prod = {
-            name = "node-group-prod"
-            instance_types = ["m5.2xlarge"]
-            min_size     = 3
-            max_size     = 10
-            desired_size = 3
-            vpc_security_group_ids = [
-                aws_security_group.node_group_prod_sg.id
-            ]
-        }
+resource "aws_eks_node_group" "node-group-dev" {
+    cluster_name = aws_eks_cluster.testapp_cluster.name
+    node_group_name = "node-group-dev"
+    node_role_arn = aws_iam_role.eks_nodegroup_role.arn
+    subnet_ids = local.node_subnet_id
+    source_security_group_ids = aws_security_group.node_group_dev_sg.id
+    instance_types = ["t3.large"]
+    scaling_config {
+        desired_size = 3
+        min_size = 3
+        max_size = 5
+    }
+}
+
+resource "aws_eks_node_group" "node-group-prod" {
+    cluster_name = aws_eks_cluster.testapp_cluster.name
+    node_group_name = "node-group-prod"
+    node_role_arn = aws_iam_role.eks_nodegroup_role.arn
+    subnet_ids = local.node_subnet_id
+    source_security_group_ids = aws_security_group.node_group_prod_sg.id
+    instance_types = ["m5.2xlarg"]
+    scaling_config {
+        desired_size = 3
+        min_size = 3
+        max_size = 10
     }
 }

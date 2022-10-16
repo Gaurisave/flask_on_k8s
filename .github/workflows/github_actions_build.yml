@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  REPOSITORY: # TODO: update Artifact Registry
+  REPOSITORY: # TODO: update Artifact Registry like ghcr.io/<org_name>/<project_name>
 
 jobs:
 
